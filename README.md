@@ -14,3 +14,7 @@ npm run dev
 ## Build for prod
 
 `npm run build`
+
+## Credits
+
+* Sounds & music: http://www.classicgaming.cc/classics/space-invaders/sounds

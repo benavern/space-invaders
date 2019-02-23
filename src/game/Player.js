@@ -1,6 +1,7 @@
 import GameObject from './GameObject'
 import Missile from './Missile'
 import playerImg from '../assets/player.png'
+import fireSound from '../assets/shoot.wav'
 
 export default class Player extends GameObject {
   constructor (...args) {
@@ -11,6 +12,9 @@ export default class Player extends GameObject {
 
     this.img = null
     this.loadImg()
+
+    this.fireSound = new Audio(fireSound)
+    this.fireSound.load()
   }
 
   loadImg () {
@@ -21,6 +25,9 @@ export default class Player extends GameObject {
 
   fire () {
     this.missiles.push(new Missile({ x: this.x + this.width / 2, y: this.y, width: 10, height: 10 }))
+    this.fireSound.pause()
+    this.fireSound.currentTime = 0
+    this.fireSound.play()
   }
 
   reset () {

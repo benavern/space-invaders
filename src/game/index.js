@@ -1,5 +1,8 @@
-import Player from "./Player";
-import Enemy from "./Enemy";
+import Player from './Player'
+import Enemy from './Enemy'
+import gameMusic from '../assets/spaceinvaders1.mpeg'
+import looseSound from '../assets/explosion.wav'
+import killSound from '../assets/invaderkilled.wav'
 
 const LEFT = 37,
       RIGHT = 39,
@@ -24,12 +27,13 @@ export default class Game {
 
     this.nbEnemies = nbEnemies
 
-    this.paused = true
+    this.paused = false
     this.state = 0 // -1 = loose | 0 = continue | 1 = win
 
     this.initPlayer()
     this.initEnemies()
     this.initListeners()
+    this.initSounds()
 
     this.render()
   }
@@ -65,6 +69,19 @@ export default class Game {
     })
   }
 
+  initSounds() {
+    this.music = new Audio(gameMusic)
+    this.music.load()
+    this.music.loop = true
+    this.music.autoplay = true
+
+    this.looseSound = new Audio(looseSound)
+    this.looseSound.load()
+
+    this.killSound = new Audio(killSound)
+    this.killSound.load()
+  }
+
   /**
    * generates a given number of enemies
    * @param {Integer} nb - the number of enemies to be created
@@ -74,9 +91,9 @@ export default class Game {
     for (let i = 0; i < nb; i++) {
       enemies.push(new Enemy({
         x: (this.width * (i / nb)) + (this.width / (2 * nb)),
-        y: 50 + 150 * Math.random(), // generates a random number beween 50 & 200
+        y: 50 + 200 * Math.random(), // generates a random number beween 50 & 250
         width: 75,
-        height: 50
+        height: 75
       }))
     }
     return enemies
@@ -157,6 +174,11 @@ export default class Game {
       if (enemy.y + enemy.height > this.player.y) this.state = -1
     })
 
+    if (enemiesHit.length) {
+      this.killSound.currentTime = 0
+      this.killSound.play()
+    }
+
     this.enemies = this.enemies.filter(enemy => !enemiesHit.includes(enemy))
     this.player.missiles = this.player.missiles.filter(missile => !missilesHit.includes(missile))
 
@@ -176,21 +198,25 @@ export default class Game {
 
   pause() {
     this.paused = true
+    this.music.pause()
   }
 
-  resume() {
+  resume () {
     this.paused = false
+    this.music.play()
   }
 
   reset() {
     this.initPlayer()
     this.initEnemies()
     this.state = 0
+    this.music.currentTime = 0
     this.render()
   }
 
   loose () {
     this.pause()
+    this.looseSound.play()
     if(confirm('You loose!\nTry again?')) {
       this.reset()
       this.start()
