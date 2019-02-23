@@ -1,6 +1,10 @@
 import Player from "./Player";
 import Enemy from "./Enemy";
 
+const LEFT = 37,
+      RIGHT = 39,
+      ESCAPE = 27
+
 export default class Game {
   /**
    * Space invaders game constructor
@@ -37,20 +41,20 @@ export default class Game {
   }
 
   initListeners() {
-    window.addEventListener('keydown', e => {
+    window.addEventListener('keydown', ({ keyCode }) => {
       // move right
-      if (e.keyCode === 39) this.playerVect.x = 1
+      if (keyCode === RIGHT) this.playerVect.x = 1
       // move left
-      if (e.keyCode === 37) this.playerVect.x = -1
+      if (keyCode === LEFT) this.playerVect.x = -1
       // don't move if player has reached the sides of the game screen
       if ((this.playerVect.x < 0 && this.player.x < 0) || (this.playerVect.x > 0 && (this.player.x + this.player.width > this.width))) this.playerVect.x = 0
     })
 
-    window.addEventListener('keyup', e => {
+    window.addEventListener('keyup', ({ keyCode }) => {
       // stop moving
-      if ((e.keyCode === 39  || e.keyCode === 37) && this.playerVect.x) this.playerVect.x = 0
+      if ((keyCode === RIGHT  || keyCode === LEFT) && this.playerVect.x) this.playerVect.x = 0
       // pause
-      if (e.keyCode === 27) !this.paused ? this.pause() : this.start()
+      if (keyCode === ESCAPE) !this.paused ? this.pause() : this.start()
     })
   }
 
