@@ -1,3 +1,3 @@
-import Spaceship from "./Spaceship";
+import GameObject from "./GameObject";
 
-export default class Ennemy extends Spaceship {}
+export default class Ennemy extends GameObject {}
