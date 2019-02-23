@@ -111,7 +111,12 @@ export default class Game {
 
   renderGameObject(gameObject, moveVect) {
     gameObject.move(moveVect)
-    this.ctx.fillRect(gameObject.x, gameObject.y, gameObject.width, gameObject.height)
+    if (gameObject.img) {
+      this.ctx.drawImage(gameObject.img, gameObject.x, gameObject.y, gameObject.width, gameObject.height)
+    } else {
+      this.ctx.fillStyle = 'white'
+      this.ctx.fillRect(gameObject.x, gameObject.y, gameObject.width, gameObject.height)
+    }
   }
 
   renderMissiles(missiles, moveVect) {
