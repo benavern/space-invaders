@@ -5,4 +5,4 @@ const game = new Game({
   nbEnemies: 5
 })
 
-game.start()
+// game.start()

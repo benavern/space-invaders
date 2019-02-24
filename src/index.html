@@ -5,12 +5,178 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="main.css">
+    <link href="https://fonts.googleapis.com/css?family=Major+Mono+Display|VT323" rel="stylesheet">
     <link rel="preload" href="./assets/enemy.png" as="image">
     <link rel="preload" href="./assets/player.png" as="image">
     <title>Space Invaders</title>
 </head>
 <body>
-    <canvas id="game"></canvas>
-    <script src="./main.js"></script>
+  <section>
+    <div class="container center">
+      <h1>(Z) Space Invaders</h1>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h2>Hello, World!</h2>
+
+      <p>
+        Here is a little <b>Space Invaders</b> game made with JavaScript & HTML5 canvas.
+      </p>
+
+      <p>
+        The idea behind that game was to train using both javascript es6 classes & HTML5 canvas. Those are 2 things I didn't know a lot about but have wanted to use for a while.
+      </p>
+
+      <p>
+        I plan to make the code evolve with a lot of ideas I have. See the checklist <b><a href="#todo">here [&DownArrow;]</a></b>
+      </p>
+
+      <p>
+        The code is available on GitHub & you can try it just below.
+      </p>
+
+      <p>
+        Enjoy...
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h2>Links</h2>
+
+      <div class="grid">
+        <div class="grid-cell center">
+          <a href="https://github.com/benavern/space-invaders" class="btn" target="_blank">
+            Go to Github [&UpperRightArrow;]
+          </a>
+        </div>
+
+        <div class="grid-cell center">
+          <a href="#game" class="btn">
+            Go to Game [&DownArrow;]
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h2>Instructions</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Key</th>
+            <th>Function</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td>
+              <b>[&leftarrow;]</b> (Left)
+            </td>
+            <td>move left</td>
+          </tr>
+
+          <tr>
+            <td>
+              <b>[&rightarrow;]</b> (Right)
+            </td>
+            <td>move right</td>
+          </tr>
+
+          <tr>
+            <td>
+              <b>[_]</b> (Spacebar)
+            </td>
+            <td>fire</td>
+          </tr>
+
+          <tr>
+            <td>
+              <b>[Esc]</b> (escape)
+            </td>
+            <td>pause / resume</td>
+          </tr>
+
+          <tr>
+            <td>
+              <b>[F]</b>
+            </td>
+            <td>fullscreen</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <canvas id="game">If you see this, your browser does not support this game. :(</canvas>
+  </section>
+
+  <section id="todo">
+    <div class="container">
+      <h2>Checklist</h2>
+
+      <p>
+        Here are the things I'd like to do with this project :
+      </p>
+
+      <ul class="checklist">
+        <li class="check">update loop</li>
+        <li class="check">pause state</li>
+        <li class="check">
+          player
+          <ul class="checklist">
+            <li class="check">move</li>
+            <li class="check">
+              fire
+              <ul class="checklist">
+                <li class="check">missiles</li>
+                <li class="check">sound</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li>
+          enemies
+          <ul class="checklist">
+            <li class="check">move</li>
+            <li>fire</li>
+          </ul>
+        </li>
+        <li class="check">collisions</li>
+        <li>hud</li>
+        <li class="check">fullScreen</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h2>
+        Credits
+      </h2>
+
+      <ul>
+        <li>
+            Sounds & music: <a href="http://www.classicgaming.cc/classics/space-invaders/sounds">www.classicgaming.cc</a>
+        </li>
+
+        <li>
+          <span class="color-primary">&lt;/&gt;</span>
+          with
+          <span class="color-secondary">&hearts;</span>
+          by <a href="https://benjamin.caradeuc.info/">Benjamin Caradeuc</a>
+        </li>
+      </ul>
+    </div>
+  </section>
+  <script src="./main.js"></script>
 </body>
 </html>

@@ -1,10 +1,135 @@
-body {
-  margin: 0;
+/* VARIABLES */
+:root {
+  --bg-color: #222;
+  --primary-color: #55adab;
+  --secondary-color: #ba55ad;
+  --text-color: #f4f4fb;
+  --shadow-color: #55adab22;
+  --border: 1px solid var(--shadow-color);
+  font-size: 20px;
 }
 
-canvas {
+/* RESET */
+body {
+  margin: 0;
+  font-family: 'VT323', monospace;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+h1, h2 {
+  color: var(--primary-color)
+}
+
+h1 {
+  font-size: 2.5rem;
+}
+
+section {
+  border-bottom: var(--border);
+}
+
+a {
+  color: inherit;
+}
+
+a:hover {
+  color: var(--primary-color)
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+ul {
+  list-style-type: square;
+  list-style-position: inside;
+  padding: 0;
+}
+ul ul {
+  padding-left: 1.5rem;
+}
+
+th {
+  font-size: 1.5rem;
+}
+
+td, th {
+  border: var(--border);
+  text-align: left;
+  padding: .25rem 1rem;
+}
+
+tr:nth-child(even) {
+  background-color: var(--shadow-color);
+}
+
+/* UTILS */
+.container {
+  margin: auto;
+  padding: 2rem;
+  width: 100%;
+  max-width: 768px;
+}
+
+.center {
+  text-align: center;
+}
+
+.btn {
+  display: inline-block;
+  padding: .5em 1.5em;
+  background-color: var(--bg-color);
+  color: var(--secondary-color);
+  font-family: inherit;
+  font-size: inherit;
+  text-decoration: none;
+  border: .15em solid var(--secondary-color);
+}
+
+.btn:hover {
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+}
+
+.color-primary {
+  color: var(--primary-color);
+}
+
+b, .color-secondary {
+  color: var(--secondary-color);
+}
+
+ul.checklist {
+  list-style-type: none;
+}
+
+ul.checklist li:before {
+  content: '\2718';
+  margin-right: .75em;
+}
+ul.checklist li.check:before {
+  content: '\2714';
+}
+
+/* GRID */
+.grid {
+  display: flex;
+  margin: 1rem -1rem;
+}
+
+.grid .grid-cell {
+  flex: 1;
+  padding: 1rem;
+}
+
+/* GAME */
+canvas#game {
   display: block;
-  background-color: #333;
+  background-color: var(--bg-color);
   background-image: url('./assets/background.jpg');
   background-size: cover;
   background-repeat: no-repeat;

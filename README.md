@@ -1,8 +1,11 @@
 # Space invaders
 
-> A space invaders game made with javascript & html5 canvas
+> A space invaders game made with javascript & html5 canvas.
 
-**...Work in progress...**
+![Screenshot](screenrecord.gif)
+<!-- ![Screenshot](screenshot.png) -->
+
+[Demo](https://z-space-invaders.netlify.com/)
 
 ## Develop
 

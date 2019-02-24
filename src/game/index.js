@@ -4,10 +4,13 @@ import gameMusic from '../assets/spaceinvaders1.mpeg'
 import looseSound from '../assets/explosion.wav'
 import killSound from '../assets/invaderkilled.wav'
 
-const LEFT = 37,
-      RIGHT = 39,
-      SPACE = 32,
-      ESCAPE = 27
+const KEYBOARD = {
+  LEFT: 37,
+  RIGHT: 39,
+  FIRE: 32, // space
+  PAUSE: 27, // escape
+  FULLSCREEN: 70 // "F"
+}
 
 export default class Game {
   /**
@@ -19,23 +22,27 @@ export default class Game {
   constructor({ el, nbEnemies = 3 }) {
     this.canvas = document.querySelector(el)
     this.ctx = this.canvas.getContext('2d')
-    this.width = window.innerWidth
-    this.height = window.innerHeight
-
-    this.canvas.width = this.width
-    this.canvas.height = this.height
 
     this.nbEnemies = nbEnemies
 
-    this.paused = false
+    this.paused = true
     this.state = 0 // -1 = loose | 0 = continue | 1 = win
 
+    this.initCanvas()
     this.initPlayer()
     this.initEnemies()
     this.initListeners()
     this.initSounds()
 
     this.render()
+  }
+
+  initCanvas() {
+    this.width = window.innerWidth
+    this.height = window.innerHeight
+
+    this.canvas.width = this.width
+    this.canvas.height = this.height
   }
 
   initPlayer () {
@@ -50,30 +57,70 @@ export default class Game {
   }
 
   initListeners() {
-    window.addEventListener('keydown', ({ keyCode }) => {
+    window.addEventListener('keydown', (e) => {
+      // Do nothing if game is paused
+      if (this.paused) return
+
+      // prevent page to move on key press
+      if(Object.values(KEYBOARD).includes(e.keyCode)) e.preventDefault()
+
       // move right
-      if (keyCode === RIGHT) this.playerVect.x = 1
+      if (e.keyCode === KEYBOARD.RIGHT) this.playerVect.x = 1
       // move left
-      if (keyCode === LEFT) this.playerVect.x = -1
+      if (e.keyCode === KEYBOARD.LEFT) this.playerVect.x = -1
       // don't move if player has reached the sides of the game screen
       if ((this.playerVect.x < 0 && this.player.x < 0) || (this.playerVect.x > 0 && (this.player.x + this.player.width > this.width))) this.playerVect.x = 0
     })
 
-    window.addEventListener('keyup', ({ keyCode }) => {
-      // stop moving
-      if ((keyCode === RIGHT  || keyCode === LEFT) && this.playerVect.x) this.playerVect.x = 0
+    window.addEventListener('keyup', (e) => {
       // pause
-      if (keyCode === ESCAPE) !this.paused ? this.pause() : this.start()
+      if (e.keyCode === KEYBOARD.PAUSE) !this.paused ? this.pause() : this.start()
+
+      // Do nothing if game is paused
+      if (this.paused) return
+
+      // prevent page to move on key press
+      if(Object.values(KEYBOARD).includes(e.keyCode)) e.preventDefault()
+
+      // stop moving
+      if ((e.keyCode === KEYBOARD.RIGHT  || e.keyCode === KEYBOARD.LEFT) && this.playerVect.x) this.playerVect.x = 0
       // fire
-      if (keyCode === SPACE) this.player.fire()
+      if (e.keyCode === KEYBOARD.FIRE) this.player.fire()
+      // fullscreen
+      if (e.keyCode === KEYBOARD.FULLSCREEN) this.fullscreen()
     })
+  }
+
+  fullscreen() {
+    if(!document.fullscreenElement) {
+      if (this.canvas.requestFullscreen) {
+        this.canvas.requestFullscreen();
+      } else if (this.canvas.mozRequestFullScreen) { /* Firefox */
+        this.canvas.mozRequestFullScreen();
+      } else if (this.canvas.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+        this.canvas.webkitRequestFullscreen();
+      } else if (this.canvas.msRequestFullscreen) { /* IE/Edge */
+        this.canvas.msRequestFullscreen();
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.mozCancelFullScreen) {
+        document.mozCancelFullScreen();
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+      }
+    }
+    this.initCanvas()
   }
 
   initSounds() {
     this.music = new Audio(gameMusic)
     this.music.load()
     this.music.loop = true
-    this.music.autoplay = true
+    // this.music.autoplay = true
 
     this.looseSound = new Audio(looseSound)
     this.looseSound.load()
@@ -207,6 +254,7 @@ export default class Game {
   }
 
   reset() {
+    this.initCanvas()
     this.initPlayer()
     this.initEnemies()
     this.state = 0
