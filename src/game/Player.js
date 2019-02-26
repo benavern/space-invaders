@@ -1,26 +1,16 @@
 import GameObject from './GameObject'
 import Missile from './Missile'
-import playerImg from '../assets/player.png'
-import fireSound from '../assets/shoot.wav'
 
 export default class Player extends GameObject {
   constructor (...args) {
     super(...args)
 
     this.velocity = 10
+
     this.missiles = []
 
-    this.img = null
-    this.loadImg()
-
-    this.fireSound = new Audio(fireSound)
-    this.fireSound.load()
-  }
-
-  loadImg () {
-    let img = new Image(this.width, this.height)
-    img.onload = () => this.img = img
-    img.src = playerImg
+    this.texture = args[0].texture
+    this.fireSound = args[0].fireSound
   }
 
   fire () {
@@ -28,6 +18,21 @@ export default class Player extends GameObject {
     this.fireSound.pause()
     this.fireSound.currentTime = 0
     this.fireSound.play()
+  }
+
+  render () {
+    // draw the player
+    this.canvas.ctx.drawImage(this.texture, this.x, this.y, this.width, this.height)
+
+
+    // if a missile reaches the canvas border, it destroys itself
+    this.missiles = this.missiles.filter(missile => missile.y > 0)
+
+    // draw missiles
+    this.missiles.forEach(missile => {
+      missile.move()
+      missile.render()
+    })
   }
 
   reset () {

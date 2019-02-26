@@ -1,3 +1,5 @@
+import { canvas } from './Canvas'
+
 export default class GameObject {
   /**
    * A GameObject is a position and a size
@@ -10,11 +12,14 @@ export default class GameObject {
   constructor ({x = 0, y = 0, width = 50, height = 50}) {
     this.initialPosition = { x, y }
 
+    this.canvas = canvas
+
     this.x = x - width / 2
     this.y = y - height / 2
     this.width = width
     this.height = height
 
+    this.direction = {x: 0, y: 0}
     this.velocity = 1
   }
 
@@ -22,13 +27,18 @@ export default class GameObject {
    * make the GameObject change its position
    * @param {Object {x: Integer, y: Integer}} direction - positive or negative
    */
-  move ({x = 0, y = 0}) {
-    this.x += x * this.velocity
-    this.y += y * this.velocity
+  move () {
+    this.x += this.direction.x * this.velocity
+    this.y += this.direction.y * this.velocity
   }
 
   reset () {
     this.x = this.initialPosition.x
     this.y = this.initialPosition.y
+  }
+
+  render () {
+    this.canvas.ctx.fillStyle = 'white'
+    this.canvas.ctx.fillRect(this.x, this.y, this.width, this.height)
   }
 }
