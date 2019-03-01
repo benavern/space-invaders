@@ -14,9 +14,9 @@ const KEYBOARD = {
 const STATE = {
   LOADING: 0,
   WELCOME: 1,
-  PAUSED: 2,
-  LOST: 3,
-  WON: 4,
+  LOST: 2,
+  WON: 3,
+  PAUSED: 4,
   PLAYING: 5
 }
 
@@ -78,7 +78,7 @@ export default class Game {
 
   initListeners() {
     window.addEventListener('keydown', (e) => {
-      // Do nothing if game is paused
+      // Do nothing if not playing
       if (this.gameState < STATE.PLAYING) return
 
       // prevent page to move on key press
@@ -94,12 +94,13 @@ export default class Game {
     })
 
     window.addEventListener('keyup', (e) => {
-      if (this.gameState < STATE.WELCOME) return
+      // do nothing if not paused or playing
+      if (this.gameState < STATE.PAUSED) return
 
       // pause
-      if (e.keyCode === KEYBOARD.PAUSE) !this.paused ? this.pause() : this.resume()
+      if (e.keyCode === KEYBOARD.PAUSE) this.gameState != STATE.PAUSED ? this.pause() : this.resume()
 
-      // Do nothing if game is paused
+      // Do nothing if game is not playing
       if (this.gameState < STATE.PLAYING) return
 
       // prevent page to move on key press
@@ -192,7 +193,7 @@ export default class Game {
   }
 
   updateGame () {
-    if (!this.loading && !this.paused) {
+    if (this.gameState === STATE.PLAYING) {
       this.player.move()
       this.updateEnemies()
     }
