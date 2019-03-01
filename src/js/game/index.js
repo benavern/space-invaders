@@ -1,7 +1,7 @@
-import { initCanvas } from './Canvas';
+import { initCanvas } from './Canvas'
 import Assets from './Assets'
-import Player from './Player'
-import Enemy from './Enemy'
+import { Player, Enemy } from './gameObjects'
+import { PauseMenu, LoadingMenu, WelcomeMenu, LostMenu, WonMenu } from './hud'
 
 const KEYBOARD = {
   LEFT: 37,
@@ -9,6 +9,15 @@ const KEYBOARD = {
   FIRE: 32, // space
   PAUSE: 27, // escape
   FULLSCREEN: 70 // "F"
+}
+
+const STATE = {
+  LOADING: 0,
+  WELCOME: 1,
+  PAUSED: 2,
+  LOST: 3,
+  WON: 4,
+  PLAYING: 5
 }
 
 export default class Game {
@@ -28,8 +37,7 @@ export default class Game {
     this.assets = new Assets()
 
     // game state
-    this.paused = true
-    this.loading = true
+    this.gameState = STATE.LOADING
 
     // player
     this.player = this.generatePlayer()
@@ -37,6 +45,13 @@ export default class Game {
     // enemies
     this.enemies = this.generateEnemies(this.nbEnemies)
     this.enemiesChangeDirection = false
+
+    // menus
+    this.loadingMenu = new LoadingMenu()
+    this.welcomeMenu = new WelcomeMenu()
+    this.lostMenu = new LostMenu()
+    this.wonMenu = new WonMenu()
+    this.pauseMenu = new PauseMenu()
 
     // game music
     this.music = this.assets.music
@@ -48,14 +63,15 @@ export default class Game {
   }
 
   init () {
+    this.gameState = STATE.LOADING
     this.assets.load()
       .then(() => {
-        this.loading = false
-        this.render()
+        this.gameState = STATE.WELCOME
         this.initListeners()
+        this.update()
       })
       .catch(err => {
-        this.loading = true
+        this.gameState = STATE.LOADING
         console.error(err)
       })
   }
@@ -63,7 +79,7 @@ export default class Game {
   initListeners() {
     window.addEventListener('keydown', (e) => {
       // Do nothing if game is paused
-      if (this.paused || this.loading) return
+      if (this.gameState < STATE.PLAYING) return
 
       // prevent page to move on key press
       if(Object.values(KEYBOARD).includes(e.keyCode)) e.preventDefault()
@@ -78,13 +94,13 @@ export default class Game {
     })
 
     window.addEventListener('keyup', (e) => {
-      if (this.loading) return
+      if (this.gameState < STATE.WELCOME) return
 
       // pause
-      if (e.keyCode === KEYBOARD.PAUSE) !this.paused ? this.pause() : this.start()
+      if (e.keyCode === KEYBOARD.PAUSE) !this.paused ? this.pause() : this.resume()
 
       // Do nothing if game is paused
-      if (this.paused) return
+      if (this.gameState < STATE.PLAYING) return
 
       // prevent page to move on key press
       if(Object.values(KEYBOARD).includes(e.keyCode)) e.preventDefault()
@@ -95,6 +111,22 @@ export default class Game {
       if (e.keyCode === KEYBOARD.FIRE) this.player.fire()
       // fullscreen
       if (e.keyCode === KEYBOARD.FULLSCREEN) this.canvas.fullscreen()
+    })
+
+    this.welcomeMenu.events.on('start', () => {
+      if (this.gameState === STATE.WELCOME) this.resume()
+    })
+
+    this.lostMenu.events.on('start', () => {
+      if (this.gameState === STATE.LOST) this.resume()
+    })
+
+    this.wonMenu.events.on('start', () => {
+      if (this.gameState === STATE.WON) this.resume()
+    })
+
+    this.pauseMenu.events.on('resume', () => {
+      if (this.gameState === STATE.PAUSED) this.resume()
     })
   }
 
@@ -128,24 +160,48 @@ export default class Game {
     return enemies
   }
 
-  render() {
-    // clear the canvas before render
+  renderGame () {
+    // first clear the canvas
     this.canvas.clear()
 
-    this.renderPlayer()
-    this.renderEnemies()
+    // then render something
+    switch (this.gameState) {
+      case (STATE.LOADING):
+        this.loadingOverlay.render()
+        break
+      case (STATE.WELCOME):
+        this.welcomeMenu.render()
+        break
+      case (STATE.PAUSED):
+        this.pauseMenu.render()
+        break
+      case (STATE.LOST):
+        this.lostMenu.render()
+        break
+      case (STATE.WON):
+        this.wonMenu.render()
+        break
+      case (STATE.PLAYING):
+        this.player.render()
+        this.enemies.forEach(enemy => {
+          enemy.render()
+        })
+        this.checkCollisions()
+        break
+    }
   }
 
-  renderPlayer() {
-    this.player.move()
-    this.player.render()
+  updateGame () {
+    if (!this.loading && !this.paused) {
+      this.player.move()
+      this.updateEnemies()
+    }
   }
 
-  renderEnemies() {
+  updateEnemies () {
     let changeDirection = false
     this.enemies.forEach(enemy => {
       enemy.move(this.enemiesChangeDirection)
-      enemy.render()
       // if any enemy reaches the edges of the game container, change enemies direction
       if (enemy.x < 0 || enemy.x + enemy.width > this.width) changeDirection = true
     })
@@ -155,10 +211,8 @@ export default class Game {
   }
 
   update() {
-    this.render()
-    this.checkCollisions()
-
-    if (this.paused) return
+    this.updateGame()
+    this.renderGame()
     requestAnimationFrame(this.update.bind(this))
   }
 
@@ -187,36 +241,31 @@ export default class Game {
     if (!this.enemies.length) this.win()
   }
 
-  start() {
-    this.resume()
-    this.update()
-  }
-
   pause() {
-    this.paused = true
+    this.gameState = STATE.PAUSED
     this.music.pause()
   }
 
   resume () {
-    this.paused = false
+    this.gameState = STATE.PLAYING
     this.music.play()
   }
 
   reset() {
     this.player = this.generatePlayer()
     this.enemies = this.generateEnemies(this.nbEnemies)
+    this.music.pause()
     this.music.currentTime = 0
-    this.render()
   }
 
   loose () {
-    this.pause()
+    this.gameState = STATE.LOST
     this.looseSound.play()
     this.reset()
   }
 
   win () {
-    this.pause()
+    this.gameState = STATE.WON
     this.nbEnemies += 1
     this.reset()
   }

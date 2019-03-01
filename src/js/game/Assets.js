@@ -1,9 +1,9 @@
-import gameMusic from '../assets/spaceinvaders1.mpeg'
-import looseSound from '../assets/explosion.wav'
-import enemyTexture from '../assets/enemy.png'
-import killSound from '../assets/invaderkilled.wav'
-import playerTexture from '../assets/player.png'
-import fireSound from '../assets/shoot.wav'
+import gameMusic from '../../assets/spaceinvaders1.mpeg'
+import looseSound from '../../assets/explosion.wav'
+import enemyTexture from '../../assets/enemy.png'
+import killSound from '../../assets/invaderkilled.wav'
+import playerTexture from '../../assets/player.png'
+import fireSound from '../../assets/shoot.wav'
 
 export default class Assets {
   constructor () {

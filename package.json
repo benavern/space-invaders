@@ -5,13 +5,14 @@
   "main": "index.js",
   "dependencies": {},
   "devDependencies": {
-    "rimraf": "^2.6.3",
-    "parcel-bundler": "^1.11.0"
+    "parcel-bundler": "^1.11.0",
+    "rimraf": "^2.6.3"
   },
   "scripts": {
-    "dev": "parcel src/index.html",
-    "prebuild": "rimraf .cache dist",
-    "build": "parcel build src/index.html"
+    "dev": "parcel src/*.html",
+    "prebuild": "npm run cleanup",
+    "build": "parcel build src/*.html",
+    "cleanup": "rimraf .cache dist"
   },
   "author": "",
   "license": "ISC"

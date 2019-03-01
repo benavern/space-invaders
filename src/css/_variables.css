@@ -1,0 +1,8 @@
+:root {
+  --bg-color: #222;
+  --primary-color: #55adab;
+  --secondary-color: #ba55ad;
+  --text-color: #f4f4fb;
+  --shadow-color: #55adab22;
+  --border: 1px solid var(--shadow-color);
+}

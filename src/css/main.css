@@ -1,15 +1,11 @@
 /* VARIABLES */
-:root {
-  --bg-color: #222;
-  --primary-color: #55adab;
-  --secondary-color: #ba55ad;
-  --text-color: #f4f4fb;
-  --shadow-color: #55adab22;
-  --border: 1px solid var(--shadow-color);
+@import './_variables.css';
+
+/* RESET */
+html {
   font-size: 20px;
 }
 
-/* RESET */
 body {
   margin: 0;
   font-family: 'VT323', monospace;
@@ -115,6 +111,20 @@ ul.checklist li.check:before {
   content: '\2714';
 }
 
+.game-container {
+  position: relative;
+  height: 0;
+  padding-top: calc(100% * 9 / 16)
+}
+
+.game-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
 /* GRID */
 .grid {
   display: flex;
@@ -124,14 +134,4 @@ ul.checklist li.check:before {
 .grid .grid-cell {
   flex: 1;
   padding: 1rem;
-}
-
-/* GAME */
-canvas#game {
-  display: block;
-  background-color: var(--bg-color);
-  background-image: url('./assets/background.jpg');
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: 50%;
 }
