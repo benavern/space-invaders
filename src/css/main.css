@@ -106,8 +106,12 @@ ul.checklist li:before {
   content: '\2718';
   margin-right: .75em;
 }
+
 ul.checklist li.check:before {
   content: '\2714';
+}
+ul.checklist li ul.checklist {
+  margin: .5em 0;
 }
 
 .game-container {
