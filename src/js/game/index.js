@@ -1,7 +1,7 @@
 import { initCanvas } from './Canvas'
 import Assets from './Assets'
 import { Player, Enemy } from './gameObjects'
-import { PauseMenu, LoadingMenu, WelcomeMenu, LostMenu, WonMenu } from './hud'
+import { PauseMenu, LoadingMenu, WelcomeMenu, LostMenu, WonMenu, ScoreBoard } from './hud'
 
 const KEYBOARD = {
   LEFT: 37,
@@ -32,6 +32,7 @@ export default class Game {
     this.height = window.innerHeight
     this.canvas = initCanvas({ el, width: this.width, height: this.height })
     this.nbEnemies = nbEnemies
+    this.initialNbEnemies = nbEnemies
 
     // assets
     this.assets = new Assets()
@@ -52,6 +53,9 @@ export default class Game {
     this.lostMenu = new LostMenu()
     this.wonMenu = new WonMenu()
     this.pauseMenu = new PauseMenu()
+
+    // scoreBoard
+    this.scoreBoard = new ScoreBoard()
 
     // game music
     this.music = this.assets.music
@@ -183,11 +187,11 @@ export default class Game {
         this.wonMenu.render()
         break
       case (STATE.PLAYING):
+        this.scoreBoard.render()
         this.player.render()
         this.enemies.forEach(enemy => {
           enemy.render()
         })
-        this.checkCollisions()
         break
     }
   }
@@ -196,6 +200,7 @@ export default class Game {
     if (this.gameState === STATE.PLAYING) {
       this.player.move()
       this.updateEnemies()
+      this.checkCollisions()
     }
   }
 
@@ -226,6 +231,7 @@ export default class Game {
         // if a player missile reaches an enemy, they both disappear
         if (missile.x > enemy.x && missile.x < enemy.x + enemy.width && missile.y > enemy.y && missile.y < enemy.y + enemy.height) {
           enemy.die()
+          this.scoreBoard.incrementScore()
           enemiesHit.push(enemy)
           missilesHit.push(missile)
         }
@@ -262,11 +268,14 @@ export default class Game {
   loose () {
     this.gameState = STATE.LOST
     this.looseSound.play()
+    this.scoreBoard.reset()
+    this.nbEnemies = this.initialNbEnemies
     this.reset()
   }
 
   win () {
     this.gameState = STATE.WON
+    this.scoreBoard.levelup()
     this.nbEnemies += 1
     this.reset()
   }
