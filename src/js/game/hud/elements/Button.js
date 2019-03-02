@@ -31,7 +31,7 @@ export default class Button {
     canvas.ctx.fillRect(this.x, this.y, this.width, this.height)
 
     // draw the text
-    canvas.ctx.font = `${this.fontSize}px sans-serif`
+    canvas.ctx.font = `${this.fontSize}px VT323`
     canvas.ctx.fillStyle = this.textColor
     canvas.ctx.textAlign = 'center'
     canvas.ctx.fillText(this.text, this.x + this.width / 2, this.y + this.fontSize * 1.9)

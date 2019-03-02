@@ -16,7 +16,7 @@ export default class Text {
 
   render () {
     // draw the text
-    canvas.ctx.font = `${this.size}px sans-serif`
+    canvas.ctx.font = `${this.size}px VT323`
     canvas.ctx.fillStyle = this.color
     canvas.ctx.textAlign = this.align
     canvas.ctx.fillText(this.text, this.x , this.y)
