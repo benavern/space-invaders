@@ -28,9 +28,7 @@ export default class Game {
    * @param {Integer} params.nbEnemies - number of enemies to generate
    */
   constructor({ el, nbEnemies = 3 }) {
-    this.width = window.innerWidth
-    this.height = window.innerHeight
-    this.canvas = initCanvas({ el, width: this.width, height: this.height })
+    this.canvas = initCanvas({ el })
     this.nbEnemies = nbEnemies
     this.initialNbEnemies = nbEnemies
 
@@ -91,7 +89,7 @@ export default class Game {
       if(e.keyCode === KEYBOARD.RIGHT || e.keyCode === KEYBOARD.LEFT) {
         this.player.direction.x = 0
         // move right
-        if (e.keyCode === KEYBOARD.RIGHT && this.player.x + this.player.width < this.width) this.player.direction.x = 1
+        if (e.keyCode === KEYBOARD.RIGHT && this.player.x + this.player.width < this.canvas.width) this.player.direction.x = 1
         // move left
         if (e.keyCode === KEYBOARD.LEFT && this.player.x > 0) this.player.direction.x = -1
       }
@@ -137,8 +135,8 @@ export default class Game {
 
   generatePlayer () {
     return new Player({
-      x: this.width / 2,
-      y: this.height - 100,
+      x: this.canvas.width / 2,
+      y: this.canvas.height - 100,
       width: 50,
       height: 50,
       texture: this.assets.playerTexture,
@@ -154,7 +152,7 @@ export default class Game {
     let enemies = []
     for (let i = 0; i < nb; i++) {
       enemies.push(new Enemy({
-        x: (this.width * (i / nb)) + (this.width / (2 * nb)),
+        x: (this.canvas.width * (i / nb)) + (this.canvas.width / (2 * nb)),
         y: 50 + 200 * Math.random(), // generates a random number beween 50 & 250
         width: 75,
         height: 75,
@@ -209,7 +207,7 @@ export default class Game {
     this.enemies.forEach(enemy => {
       enemy.move(this.enemiesChangeDirection)
       // if any enemy reaches the edges of the game container, change enemies direction
-      if (enemy.x < 0 || enemy.x + enemy.width > this.width) changeDirection = true
+      if (enemy.x < 0 || enemy.x + enemy.width > this.canvas.width) changeDirection = true
     })
 
     // next update loop, are they gonna change direction ?

@@ -1,21 +1,18 @@
 class Canvas {
-  constructor ({ el, width, height }) {
+  constructor ({ el }) {
     this.el = document.querySelector(el)
     this.ctx = this.el.getContext('2d')
 
-    this.width = width
-    this.height = height
-
-    this.el.width = width
-    this.el.height = height
+    this.el.width = this.width
+    this.el.height = this.height
   }
 
-  resize ({ width = 0, height = 0 }) {
-    this.width = width
-    this.height = height
+  get width () {
+    return window.innerWidth
+  }
 
-    this.el.width = width
-    this.el.height = height
+  get height () {
+    return window.innerHeight
   }
 
   fullscreen() {
